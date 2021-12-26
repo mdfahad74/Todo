@@ -2,14 +2,12 @@ const express = require ("express");
 const app = express();
 const bodyParser = require ("body-parser");
 const _ = require("lodash");
-// const date = require(__dirname + "/date.js");
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb+srv://admin-Fahad:Test123@cluster0.pobst.mongodb.net/todolistDB", {useNewUrlParser: true})
+mongoose.connect("mongodb+srv://admin-Fahad:Test123@cluster0.pobst.mongodb.net/todolistDB");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.set('view engine','ejs');
-const workItems =[];
 
 const itemsSchema = {
     name: String
@@ -39,7 +37,6 @@ const listSchema = {
 const List = mongoose.model("List", listSchema);
 
 app.get("/", function(req,res){
-    // const day = date.getDate();
     Item.find({},function(err, foundItems) {
         if(foundItems.length === 0){
             Item.insertMany(defaultItems, function(err){
@@ -51,7 +48,7 @@ app.get("/", function(req,res){
                 res.redirect("/");
             });
         }else{
-            res.render("lists", {listTitle: "Today"/*day*/, listOfItems: foundItems});
+            res.render("lists", {listTitle: "Today", listOfItems: foundItems});
         }
     });
 });
@@ -92,16 +89,6 @@ app.post("/", function(req,res){
             res.redirect("/"+listName);
         });
     }
-
-    
-//     if(req.body.list === "Work"){
-//         workItems.push(item);
-//         res.redirect("/work");
-//     }
-//     else {
-//         items.push(defaultItems);
-//         res.redirect("/");
-//     }
 });
 
 app.post("/delete", function (req,res) {
@@ -120,18 +107,7 @@ app.post("/delete", function (req,res) {
             }
         });
     }
-    
 });
-
-
-
-// app.get("/work", function(req,res){
-//     res.render("lists", {listTitle:"Work", listOfItems: workItems});
-// });
-
-// app.get("/about", function(req,res){
-//     res.render("about");
-// });
 
 let port = process.env.PORT;
 if (port == null || port == "") {
